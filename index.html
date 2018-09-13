@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Neighborhood Map</title>
+ 
+      <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+     <!-- Our Stylesheet!!-->
+    <link rel="stylesheet" href='styles.css'>
+
+</head>
+<body>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="leftPanel col-lg-2 col-md-3 col-sm-4 col-xs-12">
+					<div class="searchBox"><input type="text" id="myInput" data-bind="textInput : searchText" placeholder="Search"></div>
+					<div id="placeList">
+						<ul id="placeList" data-bind="foreach: listPlaces">
+		        		<a href="#"><li data-bind="text:title, click:$parent.reflectPlaceClicked"></li></a> <!-- the reflectPlaceClciked method is defd in parent -->
+		        		 </ul>
+					</div>
+			</div>
+			<div id="map" class= "col-lg-10 col-md-9 col-sm-8 col-xs-12"></div>
+		</div>
+    </div>
+
+    <script src="js/lib/knockout-3.2.0.js"></script> <!-- import knockout-->
+    <script src="js/model.js"></script>
+    <script src="js/app.js"></script>
+    <script type="text/javascript">
+    	function raiseError(){
+    		alert("Error with google maps ...")
+    	};
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAqIRdd0AB3kZfsZVhNMiCz_IaQ1dkaWc&v=3&callback=launch" onerror="raiseError()">
+    </script>	
+
+</body>
+</html>
