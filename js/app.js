@@ -20,6 +20,10 @@ function ViewModel(){
     this.markers = [];
 
     this.searchText =  ko.observable(""); // search empty
+    fourSquareClientId = "2Y2GWLNZOZH5J4H4OOMEU21PCLGTEAL4JQNTJ5H3Y5S1H3QK";
+    fourSquareClientSecret ="0GD1GY4LWZWCFDFKWRFXOWITJG0SONF1LP0Q2RFSGFK041AO";
+
+
 
     this.populateInfoWindow = function(marker, infowindow){
 
@@ -27,14 +31,34 @@ function ViewModel(){
     // one infowindow which will open at the marker that is clicked, and populate based
     // on that markers position.
     // Check to make sure the infowindow is not already opened on this marker.
-    console.log(infowindow);
     if (infowindow.marker != marker) {
       infowindow.marker = marker;
-      infowindow.setContent('<div>' +marker.title+ '</div>');
+
+    //  Foursquare API
+    var foursquareAPIUrl = 'https://api.foursquare.com/v2/venues/search?ll=' +
+                marker.position.lat() + ',' + marker.position.lng() + '&client_id=' + fourSquareClientId +
+                '&client_secret=' + fourSquareClientSecret + '&query=' + marker.title +
+                '&v=20170708' + '&m=foursquare';
+
+    console.log(foursquareAPIUrl);
+
+    $.getJSON(foursquareAPIUrl).done(function(marker) {
+
+        var response = marker.response.venues[0];
+        var htmlContent = "<div>" + response.location.formattedAddress[0]; + "</div>"
+        htmlContent += "<div>" + response.location.formattedAddress[1]; + "</div>"
+        htmlContent += "<div>" + response.location.formattedAddress[3]; + "</div>"
+        infowindow.setContent(htmlContent);
+
+    }).fail(function(){
+        alert("Issue with foursquare API")
+    });
+            
+
       infowindow.open(map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick',function(){
-        infowindow.setMarker = null;
+        infowindow.marker = null;
       });
     }
 
@@ -85,6 +109,9 @@ function ViewModel(){
     this.reflectPlaceClicked = function(){
         self.populateInfoWindow(this,self.largeInfowindow); // this here is one who called me which is basically a marker object so we pass it
         // self here is basically i am trying to call a function of the thing which i am inside ie where i have retrieved self
+        this.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout((function() {this.setAnimation(null);}).bind(this), 1000); // reset animation after 1000 ms !
+
     };
 
    
