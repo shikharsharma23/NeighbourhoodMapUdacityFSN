@@ -117,6 +117,7 @@ function ViewModel(){
    
 
     this.initMap();
+    this.largeInfowindow.close();
 
     this.listPlaces = ko.computed(function() {
     var result = [];
